@@ -39,15 +39,16 @@ def parse_args():
     parser.add_argument('--log_path', type=str, default='log', help='Path to save log files')
     parser.add_argument('--dataset', type=str, default='cifar10', help='Dataset to train on')
 
-    parser.add_argument('--optimizer', type=str, default='adam', help='Optimizer to use')
-    parser.add_argument('--batch_size', type=int, default=512, help='Batch size for training and validation')
-    parser.add_argument('--num_workers', type=int, default=8, help='Number of workers for data loading')
-    parser.add_argument('--epochs', type=int, default=100, help='Number of epochs to train')
     parser.add_argument('--lr', type=float, default=0.001, help='Initial learning rate')
-    parser.add_argument('--weight_decay', type=float, default=1e-4, help='Weight decay for optimizer')
     parser.add_argument('--width_multiplier', type=float, default=1, help='Width multiplier for MobileViT',
                         choices= [0.5, 0.75, 1.0, 1.25, 1.5, 1.75])
     parser.add_argument('--patch_size', type=int, nargs=2, default=(1, 1), help='Patch size for MobileViT')
+    parser.add_argument('--optimizer', type=str, default='adam', help='Optimizer to use')
+
+    parser.add_argument('--weight_decay', type=float, default=1e-4, help='Weight decay for optimizer')
+    parser.add_argument('--batch_size', type=int, default=512, help='Batch size for training and validation')
+    parser.add_argument('--num_workers', type=int, default=8, help='Number of workers for data loading')
+    parser.add_argument('--epochs', type=int, default=100, help='Number of epochs to train')
     parser.add_argument('--log_interval', type=int, default=10, help='Interval for logging training progress')
 
     return parser.parse_args()
@@ -171,8 +172,8 @@ def train_one_epoch(model, criterion, optimizer, data_loader, device, epoch, arg
         all_targets.extend(targets.cpu().numpy())
         all_predictions.extend(predicted.cpu().numpy())
 
-        if batch_idx % args.log_interval == 0:
-            logger.info(f"Epoch {epoch}, Batch {batch_idx}/{len(data_loader)}, Loss: {total_loss / (batch_idx + 1):.3f}")
+        # if batch_idx % args.log_interval == 0:
+        #     logger.info(f"Epoch {epoch}, Batch {batch_idx}/{len(data_loader)}, Loss: {total_loss / (batch_idx + 1):.3f}")
 
     # 计算指标
     accuracy = accuracy_score(all_targets, all_predictions)
