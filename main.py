@@ -12,8 +12,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from mobile_vit import mobilevit_v3_v2
 
 
-# 设置日志记录
-
 def setup_logging(args):
     log_filename = f"{args.dataset}_lr{args.lr}_{args.optimizer}_wm{args.width_multiplier}_{time.strftime('%Y%m%d-%H%M%S')}.log"
     # 如果log文件夹不存在，则创建
@@ -30,13 +28,11 @@ def setup_logging(args):
     logger.info(f"Log file created at {log_path}")
     return logger
 
-
-# 参数解析
 def parse_args():
     parser = argparse.ArgumentParser(description="Train MobileViT on CIFAR-10")
 
     parser.add_argument('--device', type=int, default=0, help='GPU device id')
-    parser.add_argument('--log_path', type=str, default='log', help='Path to save log files')
+    parser.add_argument('--log_path', type=str, default='log/test', help='Path to save log files')
     parser.add_argument('--dataset', type=str, default='cifar10', help='Dataset to train on')
 
     parser.add_argument('--lr', type=float, default=0.001, help='Initial learning rate')
@@ -121,7 +117,6 @@ def get_data(args):
     else:
         raise ValueError("Dataset not supported!")
 
-
 def get_model(args):
     if args.dataset == 'cifar10':
         model = mobilevit_v3_v2.MobileViTv3_v2(
@@ -171,7 +166,6 @@ def train_one_epoch(model, criterion, optimizer, data_loader, device, epoch, arg
         _, predicted = outputs.max(1)
         all_targets.extend(targets.cpu().numpy())
         all_predictions.extend(predicted.cpu().numpy())
-
         # if batch_idx % args.log_interval == 0:
         #     logger.info(f"Epoch {epoch}, Batch {batch_idx}/{len(data_loader)}, Loss: {total_loss / (batch_idx + 1):.3f}")
 
@@ -185,7 +179,6 @@ def train_one_epoch(model, criterion, optimizer, data_loader, device, epoch, arg
                 f"Accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {f1:.4f}")
 
     return total_loss / len(data_loader), precision, recall, f1
-
 
 def evaluate(model, criterion, data_loader, device, logger, epoch):
     model.eval()
